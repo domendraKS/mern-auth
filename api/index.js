@@ -1,13 +1,14 @@
-import express from "express";
+import express, { json } from "express";
 import "dotenv/config";
 import mongoose from "mongoose";
 import userRouter from "./routers/user.route.js";
+import authRouter from "./routers/auth.route.js";
 
 const app = express();
+app.use(json());
 
-const Port = process.env.PORT;
-
-app.use('/auth/user', userRouter)
+app.use('/api/user', userRouter)
+app.use('/api/auth', authRouter)
 
 const DB_CONN = () =>{
     mongoose.connect(process.env.DB_URL).then(() => {
@@ -17,6 +18,7 @@ const DB_CONN = () =>{
     })
 }
 
+const Port = process.env.PORT;
 app.listen(Port, () => {
     DB_CONN();
   console.log(`Server listen on port ${Port}`);
