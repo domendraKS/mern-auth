@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 
 function Header() {
   return (
-    <div className='bg-secondary border-bottom border-primary headerDiv'>
+    <div className='bg-dark-subtle border-bottom border-primary headerDiv'>
       <div className='d-flex justify-content-between align-items-center px-3'>
         <h1 className='fw-bold'>Auth App</h1>
         <ul className='d-flex gap-4 headerUl'>

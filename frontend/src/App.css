@@ -13,3 +13,7 @@ ul.headerUl li{
 ul.headerUl a{
   text-decoration: none !important;
 }
+
+.submitButton:hover{
+ opacity: 0.9;
+}
