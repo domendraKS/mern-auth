@@ -3,9 +3,11 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import userRouter from "./routers/user.route.js";
 import authRouter from "./routers/auth.route.js";
+import cors from "cors";
 
 const app = express();
 app.use(json());
+app.use(cors())
 
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter)
