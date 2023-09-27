@@ -17,3 +17,7 @@ ul.headerUl a{
 .submitButton:hover{
  opacity: 0.9;
 }
+
+.authPage{
+  max-width: 40%;
+}

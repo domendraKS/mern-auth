@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function SignUp() {
@@ -8,6 +8,7 @@ function SignUp() {
   const Base_Url = process.env.REACT_APP_URL;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -22,7 +23,8 @@ function SignUp() {
       await axios
         .post(`${Base_Url}/api/auth/signup`, formData)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
+          navigate('/signIn')
         })
         .catch((err) => {
           setError(true);
@@ -36,7 +38,7 @@ function SignUp() {
 
   return (
     <>
-      <div className="p-3 w-50 mx-auto">
+      <div className="p-3 mx-auto authPage">
         <h2 className="text-center fw-bold my-4">Sign-Up</h2>
         <Form className="d-flex flex-column gap-3" onSubmit={handleSubmit}>
           <Form.Control
