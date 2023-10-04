@@ -30,7 +30,7 @@ function SignIn() {
           const decoded = jwt(res.data.token)
           // console.log(decoded);
           cookie.set('authToken', res.data.token, { expires: new Date(decoded.exp * 1000) })
-          // navigate("/");
+          navigate("/");
         })
         .catch((err) => {
           setError(true);
