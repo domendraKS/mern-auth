@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import jwt from 'jwt-decode';
+import Cookies from 'universal-cookie';
 
 function SignIn() {
   const [formData, setFormData] = useState({});
@@ -9,6 +11,7 @@ function SignIn() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
+  const cookie = new Cookies()
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -23,8 +26,11 @@ function SignIn() {
       await axios
         .post(`${Base_Url}/api/auth/signin`, formData)
         .then((res) => {
-          console.log(res);
-          navigate('/');
+          // console.log(res.data.token);
+          const decoded = jwt(res.data.token)
+          // console.log(decoded);
+          cookie.set('authToken', res.data.token, { expires: new Date(decoded.exp * 1000) })
+          // navigate("/");
         })
         .catch((err) => {
           setError(true);

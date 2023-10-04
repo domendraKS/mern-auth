@@ -7,7 +7,13 @@ import cors from "cors";
 
 const app = express();
 app.use(json());
-app.use(cors())
+
+const corsOptions = {
+    origin: true,
+    credentials: true
+}
+
+app.use(cors(corsOptions))
 
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter)
@@ -22,7 +28,7 @@ const DB_CONN = () =>{
 
 const Port = process.env.PORT;
 app.listen(Port, () => {
-    DB_CONN();
+  DB_CONN();
   console.log(`Server listen on port ${Port}`);
 });
 

@@ -21,3 +21,8 @@ ul.headerUl a{
 .authPage{
   max-width: 40%;
 }
+
+.headerLogo{
+  text-decoration: none;
+  color: rgb(38, 39, 39);
+}

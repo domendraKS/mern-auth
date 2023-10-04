@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 
+//1. Signup
 export const signup = async (req, res, next) => {
   const { userName, email, password } = await req.body;
   const hashedPassword = bcrypt.hashSync(password, 10);
@@ -16,6 +17,7 @@ export const signup = async (req, res, next) => {
   }
 };
 
+//2. Signin
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -24,13 +26,12 @@ export const signin = async (req, res, next) => {
     if (!validUser) return next(errorHandler(404, "User not found"));
     const validPassword = bcrypt.compareSync(password, validUser.password);
     if (!validPassword) return next(errorHandler(401, "Wrong credentials"));
-    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, {
+      expiresIn: 10000,
+    });
     const { password: hashedPassword, ...rest } = validUser._doc;
-    const expiryDate = new Date(Date.now() + 3600000); // 1 hour
-    return res
-      .cookie("accessToken", token, { httpOnly: true, expires: expiryDate })
-      .status(200)
-      .json(rest);
+    // const expiryDate = new Date(Date.now() + 3600000); // 1 hour
+    return res.status(200).json({ message: "Successfully login", rest, token });
   } catch (error) {
     next(error);
   }

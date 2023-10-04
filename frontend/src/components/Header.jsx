@@ -5,7 +5,7 @@ function Header() {
   return (
     <div className='bg-dark-subtle border-bottom border-primary headerDiv'>
       <div className='d-flex justify-content-between align-items-center px-3'>
-        <h1 className='fw-bold'>Auth App</h1>
+        <h1 className='fw-bold'><Link to="/" className='headerLogo'>Auth App</Link></h1>
         <ul className='d-flex gap-4 headerUl'>
         <Link to="/"><li>Home</li></Link>
         <Link to="/about"><li>About</li></Link>
