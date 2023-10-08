@@ -9,22 +9,25 @@ const app = express();
 app.use(json());
 
 const corsOptions = {
-    origin: true,
-    credentials: true
-}
+  origin: true,
+  credentials: true,
+};
 
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
 
-app.use('/api/user', userRouter)
-app.use('/api/auth', authRouter)
+app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
 
-const DB_CONN = () =>{
-    mongoose.connect(process.env.DB_URL).then(() => {
-        console.log("Database is connected");
-    }).catch((err) =>{
-        console.log(err);
+const DB_CONN = () => {
+  mongoose
+    .connect(process.env.DB_URL)
+    .then(() => {
+      console.log("Database is connected");
     })
-}
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 const Port = process.env.PORT;
 app.listen(Port, () => {
@@ -33,11 +36,11 @@ app.listen(Port, () => {
 });
 
 app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    const message =  err.message || 'Internal server error';
-    return res.status(statusCode).json({
-        success: false,
-        error: message,
-        statusCode: statusCode,
-    })
-})
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal server error";
+  return res.status(statusCode).json({
+    success: false,
+    error: message,
+    statusCode: statusCode,
+  });
+});

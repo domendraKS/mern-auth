@@ -34,5 +34,6 @@ export const signin = async (req, res, next) => {
     return res.status(200).json({ message: "Successfully login", rest, token });
   } catch (error) {
     next(error);
+    console.log("error");
   }
 };

@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import jwt from 'jwt-decode';
-import Cookies from 'universal-cookie';
+import jwt from "jwt-decode";
+import Cookies from "universal-cookie";
+import {
+  signInStart,
+  signInSuccess,
+  signInFail,
+} from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function SignIn() {
   const [formData, setFormData] = useState({});
   const Base_Url = process.env.REACT_APP_URL;
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
   const navigate = useNavigate();
-  const cookie = new Cookies()
+  const cookie = new Cookies();
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.user);
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -20,25 +26,24 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
-    setError(false);
+    dispatch(signInStart());
     try {
       await axios
         .post(`${Base_Url}/api/auth/signin`, formData)
         .then((res) => {
           // console.log(res.data.token);
-          const decoded = jwt(res.data.token)
-          // console.log(decoded);
-          cookie.set('authToken', res.data.token, { expires: new Date(decoded.exp * 1000) })
+          dispatch(signInSuccess(res.data.rest));
+          const decoded = jwt(res.data.token);
+          cookie.set("authToken", res.data.token, {
+            expires: new Date(decoded.exp * 1000),
+          });
           navigate("/");
         })
         .catch((err) => {
-          setError(true);
+          dispatch(signInFail(err.response.data));
         });
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
-      setError(true);
+      dispatch(signInFail(error));
     }
   };
 
@@ -72,7 +77,9 @@ function SignIn() {
           <p>Don't have an account ? &nbsp;</p>
           <Link to="/signUp">Sign up</Link>
         </div>
-        <p className="text-danger">{error && "Something went wrong !"}</p>
+        <p className="text-danger">
+          {error ? error.error || "Something went wrong !" : ""}
+        </p>
       </div>
     </>
   );
