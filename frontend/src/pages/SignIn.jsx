@@ -10,6 +10,7 @@ import {
   signInFail,
 } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import OAuth from "../components/OAuth.jsx";
 
 function SignIn() {
   const [formData, setFormData] = useState({});
@@ -68,10 +69,11 @@ function SignIn() {
           />
           <button
             disabled={loading}
-            className="bg-dark text-light p-2 rounded uppercase text-uppercase submitButton"
+            className="bg-dark text-light p-2 rounded text-uppercase submitButton"
           >
             {loading ? "Loading" : "Sign In"}
           </button>
+          <OAuth />
         </Form>
         <div className="d-flex my-1">
           <p>Don't have an account ? &nbsp;</p>

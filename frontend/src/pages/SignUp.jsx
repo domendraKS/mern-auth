@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import OAuth from "../components/OAuth.jsx";
 
 function SignUp() {
   const [formData, setFormData] = useState({});
@@ -24,7 +25,7 @@ function SignUp() {
         .post(`${Base_Url}/api/auth/signup`, formData)
         .then((res) => {
           // console.log(res);
-          navigate('/signIn')
+          navigate("/signIn");
         })
         .catch((err) => {
           setError(true);
@@ -64,10 +65,11 @@ function SignUp() {
           />
           <button
             disabled={loading}
-            className="bg-dark text-light p-2 rounded uppercase text-uppercase submitButton"
+            className="bg-dark text-light p-2 rounded text-uppercase submitButton"
           >
             {loading ? "Loading" : "Sign up"}
           </button>
+          <OAuth />
         </Form>
         <div className="d-flex my-1">
           <p>Have an account ? &nbsp;</p>

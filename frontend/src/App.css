@@ -1,28 +1,32 @@
-.headerDiv{
+.headerDiv {
   width: 100%;
   min-height: 3.5rem;
 }
 
-ul.headerUl li{
+ul.headerUl li {
   list-style: none;
   color: black;
   font-size: 1.1rem;
   font-weight: 600;
 }
 
-ul.headerUl a{
+ul.headerUl a {
   text-decoration: none !important;
 }
 
-.submitButton:hover{
- opacity: 0.9;
+.submitButton {
+  border: 0;
 }
 
-.authPage{
+.submitButton:hover {
+  opacity: 0.9;
+}
+
+.authPage {
   max-width: 40%;
 }
 
-.headerLogo{
+.headerLogo {
   text-decoration: none;
   color: rgb(38, 39, 39);
 }
