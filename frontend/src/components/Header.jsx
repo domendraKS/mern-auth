@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
-  console.log(currentUser);
+  // console.log(currentUser);
   return (
     <div className="bg-dark-subtle border-bottom border-primary headerDiv">
       <div className="d-flex justify-content-between align-items-center px-3">
@@ -26,8 +26,8 @@ function Header() {
                 <img
                   src={currentUser.profilePicture}
                   alt="Profile"
-                  width={50}
-                  height={50}
+                  width={35}
+                  height={35}
                   className="rounded-circle object-fit-cover"
                 />
               </>

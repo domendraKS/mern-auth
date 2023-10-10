@@ -30,3 +30,18 @@ ul.headerUl a {
   text-decoration: none;
   color: rgb(38, 39, 39);
 }
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.formInput {
+  width: 30%;
+  border: none;
+  background-color: #ededed;
+}
+
+.widthDiv {
+  width: 30%;
+  margin: 0 auto;
+}
