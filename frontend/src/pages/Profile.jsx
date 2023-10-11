@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
@@ -7,15 +7,32 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "./../firebase";
+import axios from "axios";
+import Cookies from "universal-cookie";
+import {
+  updateUserFail,
+  updateUserStart,
+  updateUserSuccess,
+} from "../redux/user/userSlice.js";
 
 function Profile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
   const [image, setImage] = useState(undefined);
   // console.log(image);
   const [imagePercent, setImagePercent] = useState(0);
   const [imageError, setImageError] = useState(false);
   const [formData, setFormData] = useState({});
+  const Base_Url = process.env.REACT_APP_URL;
+  const token = new Cookies().get("authToken");
+  const dispatch = useDispatch();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
 
   useEffect(() => {
     if (image) {
@@ -47,10 +64,38 @@ function Profile() {
     );
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(updateUserStart());
+
+    try {
+      await axios
+        .patch(`${Base_Url}/api/user/update/${currentUser._id}`, formData, {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          dispatch(updateUserSuccess(res.data.rest));
+        })
+        .catch((err) => {
+          dispatch(updateUserFail(err));
+        });
+    } catch (error) {
+      // console.log(error);
+      dispatch(updateUserFail(error));
+    }
+  };
+
   return (
     <div className="p-2 mx-auto mw-100">
       <h1 className="fw-semibold text-center py-3">Profile</h1>
-      <form className="d-flex flex-column align-items-center gap-3">
+      <form
+        onSubmit={handleSubmit}
+        className="d-flex flex-column align-items-center gap-3"
+      >
         <input
           type="file"
           ref={fileRef}
@@ -85,6 +130,7 @@ function Profile() {
           className="rounded p-2 formInput"
           defaultValue={currentUser.userName}
           placeholder="Username"
+          onChange={handleChange}
         />
         <input
           type="email"
@@ -92,24 +138,33 @@ function Profile() {
           id="email"
           className="rounded p-2 formInput"
           placeholder="Email"
+          onChange={handleChange}
         />
         <input
           type="password"
           id="password"
           className="rounded p-2 formInput"
           placeholder="Password"
+          onChange={handleChange}
         />
         <button
           type="submit"
           className="btn btn-secondary formInput text-uppercase submitButton"
+          disabled={loading}
         >
-          Update
+          {loading ? "Loading" : "Update"}
         </button>
       </form>
       <div className="d-flex justify-content-between align-items-center mt-2 widthDiv">
         <span className="text-danger cursorPointer">Delete Account</span>
         <span className="text-danger cursorPointer">Sign-out</span>
       </div>
+      <p className="text-danger">
+        {error ? error.error || "Something went wrong !" : ""}
+      </p>
+      <p className="text-success">
+        {updateUserSuccess && "User updated successfully !"}
+      </p>
     </div>
   );
 }
