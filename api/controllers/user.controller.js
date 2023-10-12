@@ -30,3 +30,21 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteUser = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (req.user.id !== id) {
+    return next(errorHandler(401, "You can delete only your account!"));
+  }
+
+  try {
+    const checkUser = await User_Model.findById(id);
+    if (!checkUser) return next(errorHandler(404, "User does not exist"));
+
+    await User_Model.findByIdAndDelete(id);
+    return res.status(200).json({ message: "User successfully deleted" });
+  } catch (error) {
+    next(error);
+  }
+};
