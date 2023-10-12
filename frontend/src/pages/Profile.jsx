@@ -10,6 +10,10 @@ import { app } from "./../firebase";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import {
+  deleteUserFail,
+  deleteUserStart,
+  deleteUserSuccess,
+  signOut,
   updateUserFail,
   updateUserStart,
   updateUserSuccess,
@@ -24,7 +28,8 @@ function Profile() {
   const [imageError, setImageError] = useState(false);
   const [formData, setFormData] = useState({});
   const Base_Url = process.env.REACT_APP_URL;
-  const token = new Cookies().get("authToken");
+  const cookie = new Cookies();
+  const token = cookie.get("authToken");
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -77,16 +82,41 @@ function Profile() {
           },
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res.data.rest);
           dispatch(updateUserSuccess(res.data.rest));
         })
         .catch((err) => {
-          dispatch(updateUserFail(err));
+          dispatch(updateUserFail(err.response.data));
         });
     } catch (error) {
       // console.log(error);
       dispatch(updateUserFail(error));
     }
+  };
+
+  const handleDeleteAccount = async (e) => {
+    dispatch(deleteUserStart());
+    try {
+      await axios
+        .delete(`${Base_Url}/api/user/delete/${currentUser._id}`, {
+          headers: {
+            authorization: `${token}`,
+          },
+        })
+        .then((res) => {
+          dispatch(deleteUserSuccess());
+        })
+        .catch((err) => {
+          dispatch(deleteUserFail(err.response.data));
+        });
+    } catch (error) {
+      dispatch(deleteUserFail(error));
+    }
+  };
+
+  const handleSignOut = () => {
+    dispatch(signOut());
+    cookie.remove("authToken");
   };
 
   return (
@@ -156,8 +186,15 @@ function Profile() {
         </button>
       </form>
       <div className="d-flex justify-content-between align-items-center mt-2 widthDiv">
-        <span className="text-danger cursorPointer">Delete Account</span>
-        <span className="text-danger cursorPointer">Sign-out</span>
+        <span
+          className="text-danger cursorPointer"
+          onClick={handleDeleteAccount}
+        >
+          Delete Account
+        </span>
+        <span className="text-danger cursorPointer" onClick={handleSignOut}>
+          Sign-out
+        </span>
       </div>
       <p className="text-danger">
         {error ? error.error || "Something went wrong !" : ""}
