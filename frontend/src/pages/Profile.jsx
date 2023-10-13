@@ -11,7 +11,6 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import {
   deleteUserFail,
-  deleteUserStart,
   deleteUserSuccess,
   signOut,
   updateUserFail,
@@ -69,6 +68,7 @@ function Profile() {
     );
   };
 
+  //update user profile
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(updateUserStart());
@@ -94,12 +94,19 @@ function Profile() {
     }
   };
 
-  const handleDeleteAccount = async (e) => {
-    dispatch(deleteUserStart());
+  //signout
+  const handleSignOut = () => {
+    dispatch(signOut());
+    cookie.remove("authToken");
+  };
+
+  //delete user
+  const handleDelete = async () => {
     try {
       await axios
         .delete(`${Base_Url}/api/user/delete/${currentUser._id}`, {
           headers: {
+            "Content-Type": "application/json",
             authorization: `${token}`,
           },
         })
@@ -112,11 +119,6 @@ function Profile() {
     } catch (error) {
       dispatch(deleteUserFail(error));
     }
-  };
-
-  const handleSignOut = () => {
-    dispatch(signOut());
-    cookie.remove("authToken");
   };
 
   return (
@@ -186,10 +188,7 @@ function Profile() {
         </button>
       </form>
       <div className="d-flex justify-content-between align-items-center mt-2 widthDiv">
-        <span
-          className="text-danger cursorPointer"
-          onClick={handleDeleteAccount}
-        >
+        <span className="text-danger cursorPointer" onClick={handleDelete}>
           Delete Account
         </span>
         <span className="text-danger cursorPointer" onClick={handleSignOut}>
@@ -198,6 +197,7 @@ function Profile() {
       </div>
       <p className="text-danger">
         {error ? error.error || "Something went wrong !" : ""}
+        {/* {console.log(error.response.data.error)} */}
       </p>
       <p className="text-success">
         {updateUserSuccess && "User updated successfully !"}

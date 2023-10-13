@@ -37,8 +37,8 @@ const userSlice = createSlice({
     deleteUserStart: (state) => {
       state.loading = true;
     },
-    deleteUserSuccess: (state) => {
-      state.currentUser = null;
+    deleteUserSuccess: (state, action) => {
+      state.currentUser = action.payload;
       state.loading = false;
       state.error = false;
     },
@@ -48,8 +48,8 @@ const userSlice = createSlice({
     },
     signOut: (state) => {
       state.currentUser = null;
-      state.error = false;
       state.loading = false;
+      state.error = false;
     },
   },
 });
